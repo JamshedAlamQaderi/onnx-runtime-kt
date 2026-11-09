@@ -1,0 +1,13 @@
+product: android/app
+
+dependencies:
+  - //sample/shared
+  - $libs.androidx.activity.compose
+  - $compose.preview
+  - $compose.uiTooling
+
+settings:
+  compose: enabled
+  android:
+    namespace: com.jamshedalamqaderi.kmp.onnxrtkt.sample
+    applicationId: com.jamshedalamqaderi.kmp.onnxrtkt.sample

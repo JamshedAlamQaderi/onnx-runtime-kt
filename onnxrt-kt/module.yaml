@@ -1,0 +1,45 @@
+description: Kotlin Multiplatform bindings for ONNX Runtime (JVM, Android, iOS).
+
+product:
+  type: kmp/lib
+  platforms: [jvm, android, iosArm64, iosSimulatorArm64]
+
+aliases:
+  # JVM and Android share the same ONNX Runtime Java API (ai.onnxruntime.*).
+  - jvmAndAndroid: [jvm, android]
+
+dependencies@jvm:
+  - $libs.onnxruntime.jvm: exported
+
+dependencies@android:
+  - $libs.onnxruntime.android: exported
+
+dependencies@ios:
+  - swiftPackage:
+      repository: "https://github.com/microsoft/onnxruntime-swift-package-manager.git"
+      version: "1.24.2"
+      products: [ "onnxruntime" ]
+
+settings:
+  kotlin:
+    explicitApi: strict
+  android:
+    namespace: com.jamshedalamqaderi.kmp.onnxrtkt
+  publishing:
+    enabled: true
+    group: com.jamshedalamqaderi.kmp
+    version: 0.1.0-SNAPSHOT
+    artifactId: onnxrt-kt
+    publishSources: true
+    pom:
+      name: onnxrt-kt
+      description: Kotlin Multiplatform bindings for ONNX Runtime.
+
+settings@ios:
+  kotlin:
+    optIns: [ kotlinx.cinterop.ExperimentalForeignApi, kotlinx.cinterop.BetaInteropApi ]
+
+test-settings@jvm:
+  jvm:
+    test:
+      freeJvmArgs: [ --enable-native-access=ALL-UNNAMED ]

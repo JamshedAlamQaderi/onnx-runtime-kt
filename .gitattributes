@@ -1,0 +1,4 @@
+*.bat text eol=crlf
+kotlin text eol=lf
+*.onnx binary
+*.bin binary

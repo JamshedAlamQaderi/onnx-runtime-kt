@@ -1,0 +1,6 @@
+modules:
+  - onnxrt-kt
+  - sample/androidApp
+  - sample/desktopApp
+  - sample/iosApp
+  - sample/shared
