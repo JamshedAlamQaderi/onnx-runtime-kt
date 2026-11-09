@@ -6,6 +6,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
+/**
+ * `linear_model.onnx` (testResources) is a hand-built ONNX graph computing `y = x * 2 + 1`:
+ * input `x` float32 [N, 1], output `y` float32 [N, 1], opset 13.
+ */
 class InferenceSessionJvmTest {
     private val model: ByteArray =
         checkNotNull(javaClass.classLoader.getResourceAsStream("linear_model.onnx")) { "test model missing" }

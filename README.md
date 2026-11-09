@@ -45,7 +45,6 @@ onnxrt-kt/            the library (kmp/lib)
 sample/               "draw a digit" app built with the MNIST model from the ONNX Model Zoo
   shared/             Compose UI, DigitClassifier (inference) and DigitRasterizer (preprocessing)
   androidApp/  desktopApp/  iosApp/
-tools/                generate_linear_model.py (builds the tiny test model in onnxrt-kt/testResources)
 ```
 
 ## Sample: handwritten digit recognition
