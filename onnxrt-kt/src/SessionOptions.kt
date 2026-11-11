@@ -12,8 +12,11 @@ public enum class ExecutionProvider {
     /** XNNPACK accelerated CPU kernels (Android, iOS). */
     XNNPACK,
 
-    /** Apple Core ML (iOS, and macOS JVM builds). */
+    /** Apple Core ML (iOS, iPadOS, macOS). */
     CORE_ML,
+
+    /** WebGPU. Web only (onnxruntime-web). */
+    WEBGPU,
 }
 
 /**

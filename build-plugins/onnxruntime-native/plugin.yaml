@@ -1,0 +1,53 @@
+# Prepares ONNX Runtime for each Kotlin/Native target (see src/PrepareOnnxRuntime.kt)
+# and contributes the generated cinterop definition to that target.
+tasks:
+  prepareIosArm64:
+    action: !com.jamshedalamqaderi.kmp.onnxrtkt.build.prepareOnnxRuntime
+      target: iosArm64
+      shimDir: ${module.rootDir}/native-shim
+      defFile: ${taskOutputDir}/onnxruntime.def
+
+  prepareIosSimulatorArm64:
+    action: !com.jamshedalamqaderi.kmp.onnxrtkt.build.prepareOnnxRuntime
+      target: iosSimulatorArm64
+      shimDir: ${module.rootDir}/native-shim
+      defFile: ${taskOutputDir}/onnxruntime.def
+
+  prepareMacosArm64:
+    action: !com.jamshedalamqaderi.kmp.onnxrtkt.build.prepareOnnxRuntime
+      target: macosArm64
+      shimDir: ${module.rootDir}/native-shim
+      defFile: ${taskOutputDir}/onnxruntime.def
+
+  prepareLinuxX64:
+    action: !com.jamshedalamqaderi.kmp.onnxrtkt.build.prepareOnnxRuntime
+      target: linuxX64
+      shimDir: ${module.rootDir}/native-shim
+      defFile: ${taskOutputDir}/onnxruntime.def
+
+  prepareLinuxArm64:
+    action: !com.jamshedalamqaderi.kmp.onnxrtkt.build.prepareOnnxRuntime
+      target: linuxArm64
+      shimDir: ${module.rootDir}/native-shim
+      defFile: ${taskOutputDir}/onnxruntime.def
+
+  prepareMingwX64:
+    action: !com.jamshedalamqaderi.kmp.onnxrtkt.build.prepareOnnxRuntime
+      target: mingwX64
+      shimDir: ${module.rootDir}/native-shim
+      defFile: ${taskOutputDir}/onnxruntime.def
+
+generated:
+  cinteropDefinitions:
+    - defFile: ${tasks.prepareIosArm64.action.defFile}
+      fragment: { modifier: "@iosArm64" }
+    - defFile: ${tasks.prepareIosSimulatorArm64.action.defFile}
+      fragment: { modifier: "@iosSimulatorArm64" }
+    - defFile: ${tasks.prepareMacosArm64.action.defFile}
+      fragment: { modifier: "@macosArm64" }
+    - defFile: ${tasks.prepareLinuxX64.action.defFile}
+      fragment: { modifier: "@linuxX64" }
+    - defFile: ${tasks.prepareLinuxArm64.action.defFile}
+      fragment: { modifier: "@linuxArm64" }
+    - defFile: ${tasks.prepareMingwX64.action.defFile}
+      fragment: { modifier: "@mingwX64" }

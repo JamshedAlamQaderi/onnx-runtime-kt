@@ -1,0 +1,12 @@
+# Command-line digit classifier shared by the native Linux and Windows sample apps.
+# (macosArm64 is here so the logic can be tested on a Mac.)
+product:
+  type: kmp/lib
+  platforms: [macosArm64, linuxX64, linuxArm64, mingwX64]
+
+dependencies:
+  - //onnxrt-kt
+
+settings:
+  kotlin:
+    optIns: [ kotlinx.cinterop.ExperimentalForeignApi ]

@@ -1,6 +1,14 @@
 modules:
+  - build-plugins/onnxruntime-native
   - onnxrt-kt
   - sample/androidApp
+  - sample/cli
   - sample/desktopApp
   - sample/iosApp
+  - sample/linuxApp
+  - sample/macosApp
   - sample/shared
+  - sample/windowsApp
+
+plugins:
+  - ./build-plugins/onnxruntime-native

@@ -1,0 +1,8 @@
+product: linux/app
+
+dependencies:
+  - //sample/cli
+
+settings:
+  native:
+    entryPoint: com.jamshedalamqaderi.kmp.onnxrtkt.sample.main

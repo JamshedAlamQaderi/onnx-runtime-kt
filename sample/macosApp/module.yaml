@@ -1,0 +1,10 @@
+product: macos/app
+
+dependencies:
+  - //sample/shared
+  - $compose.ui
+
+settings:
+  compose: enabled
+  native:
+    entryPoint: com.jamshedalamqaderi.kmp.onnxrtkt.sample.main

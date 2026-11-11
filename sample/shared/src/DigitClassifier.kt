@@ -4,6 +4,7 @@ import com.jamshedalamqaderi.kmp.onnxrtkt.InferenceSession
 import com.jamshedalamqaderi.kmp.onnxrtkt.OnnxRuntime
 import com.jamshedalamqaderi.kmp.onnxrtkt.SessionOptions
 import com.jamshedalamqaderi.kmp.onnxrtkt.Tensor
+import com.jamshedalamqaderi.kmp.onnxrtkt.createSession
 import com.jamshedalamqaderi.kmp.onnxrtkt.runSingle
 import com.jamshedalamqaderi.kmp.onnxrtkt.sample.resources.Res
 import kotlin.math.exp
@@ -32,8 +33,21 @@ class DigitClassifier(modelBytes: ByteArray) : AutoCloseable {
         const val IMAGE_SIZE = 28
         const val MODEL_PATH = "files/mnist-12.onnx"
 
-        /** Loads the model bundled as a Compose Multiplatform resource. */
-        suspend fun load(): DigitClassifier = DigitClassifier(Res.readBytes(MODEL_PATH))
+        /**
+         * Reads the model when it is not available as a Compose resource. The native macOS app sets this:
+         * the Kotlin Toolchain does not package Compose resources next to `macos/app` executables.
+         */
+        var fallbackModelLoader: (suspend () -> ByteArray)? = null
+
+        /** Loads the model bundled as a Compose Multiplatform resource (or through [fallbackModelLoader]). */
+        suspend fun load(): DigitClassifier {
+            val bytes = try {
+                Res.readBytes(MODEL_PATH)
+            } catch (e: Exception) {
+                fallbackModelLoader?.invoke() ?: throw e
+            }
+            return DigitClassifier(bytes)
+        }
     }
 }
 
