@@ -34,11 +34,15 @@ internal actual fun platformCreateSession(model: ModelSource, options: SessionOp
 private class JvmInferenceSession(
     private val session: OrtSession,
     private val options: OrtSession.SessionOptions,
-) : InferenceSession {
+) : BlockingInferenceSession() {
     override val inputNames: List<String> = session.inputNames.toList()
     override val outputNames: List<String> = session.outputNames.toList()
 
-    override fun run(inputs: Map<String, Tensor>, outputNames: Collection<String>): Map<String, Tensor> = ortCall {
+    @Volatile
+    private var closed = false
+
+    override fun runSync(inputs: Map<String, Tensor>, outputNames: Collection<String>): Map<String, Tensor> = ortCall {
+        if (closed) throw OrtException("Session is closed")
         val created = ArrayList<OnnxTensor>(inputs.size)
         try {
             val ortInputs = inputs.mapValues { (_, tensor) -> tensor.toOnnxTensor().also(created::add) }
@@ -57,6 +61,10 @@ private class JvmInferenceSession(
     }
 
     override fun close() {
+        synchronized(this) {
+            if (closed) return
+            closed = true
+        }
         session.close()
         options.close()
     }
@@ -95,6 +103,7 @@ private fun SessionOptions.toOrt(): OrtSession.SessionOptions {
                 ExecutionProvider.NNAPI -> o.addNnapi()
                 ExecutionProvider.XNNPACK -> o.addXnnpack(emptyMap())
                 ExecutionProvider.CORE_ML -> o.addCoreML()
+                ExecutionProvider.WEBGPU -> throw OrtException("WebGPU is only available on the web")
             }
         }
         return o

@@ -1,12 +1,22 @@
-description: Kotlin Multiplatform bindings for ONNX Runtime (JVM, Android, iOS).
+description: Kotlin Multiplatform bindings for ONNX Runtime (JVM, Android, Apple, Linux, Windows).
 
 product:
   type: kmp/lib
-  platforms: [jvm, android, iosArm64, iosSimulatorArm64]
+  platforms: [jvm, android, iosArm64, iosSimulatorArm64, macosArm64, linuxX64, linuxArm64, mingwX64, js, wasmJs]
 
 aliases:
   # JVM and Android share the same ONNX Runtime Java API (ai.onnxruntime.*).
   - jvmAndAndroid: [jvm, android]
+  # Everything but the web, where ONNX Runtime is synchronous (adds createSession/run).
+  - nonWeb: [jvm, android, iosArm64, iosSimulatorArm64, macosArm64, linuxX64, linuxArm64, mingwX64]
+  # Where inference tests can run on the build machine (Android's local tests can't load the Android .so).
+  - jvmAndNative: [jvm, iosArm64, iosSimulatorArm64, macosArm64, linuxX64, linuxArm64, mingwX64]
+
+dependencies:
+  - $libs.kotlinx.coroutines.core
+
+test-dependencies:
+  - $libs.kotlinx.coroutines.test
 
 dependencies@jvm:
   - $libs.onnxruntime.jvm: exported
@@ -14,11 +24,11 @@ dependencies@jvm:
 dependencies@android:
   - $libs.onnxruntime.android: exported
 
-dependencies@ios:
-  - swiftPackage:
-      repository: "https://github.com/microsoft/onnxruntime-swift-package-manager.git"
-      version: "1.24.2"
-      products: [ "onnxruntime" ]
+# Native targets use the ONNX Runtime C API through a small C layer (native-shim/).
+# The build plugin downloads Microsoft's official binaries and generates the cinterop definitions:
+# Apple targets link the static library, Linux and Windows embed the official shared library.
+plugins:
+  onnxruntime-native: enabled
 
 settings:
   kotlin:
@@ -35,9 +45,13 @@ settings:
       name: onnxrt-kt
       description: Kotlin Multiplatform bindings for ONNX Runtime.
 
-settings@ios:
+settings@native:
   kotlin:
     optIns: [ kotlinx.cinterop.ExperimentalForeignApi, kotlinx.cinterop.BetaInteropApi ]
+
+settings@web:
+  kotlin:
+    optIns: [ kotlin.js.ExperimentalWasmJsInterop ]
 
 test-settings@jvm:
   jvm:
